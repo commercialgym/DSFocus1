@@ -3,9 +3,9 @@
 * PROJECT : SENG1050 - Focus Assignment #1
 * PROGRAMMER : Alexia Tu
 * FIRST VERSION : 05/17/2024
-* DESCRIPTION : Take info about flights and stores the destination and date in an array
-* of structs which are later displayed. Use dynamic memory allocation to store the 
-* strings in the struct.
+* DESCRIPTION : Takes info from stdin about 10 flights and stores the destination and 
+* date in an array of structs which are later displayed in a properly formatted manor. 
+* Uses dynamic memory allocation to store the strings in the struct.
 	*
 */
 
@@ -17,44 +17,32 @@
 
 #define MAX_CHARS 31
 #define SIZEOF_ARRAY 10
-//STRUCT
+
 typedef struct
 {
-	//ensure this is proper way to "know how long each string is" struct requirements
-	//since error checking is required i may have to use malloc elsewhere for these pointers?
-	//error that compiler was giving me made me realize that i must use malloc elsewhere so that i can also
-	//error check for them
 	char* pFlightDest;
 	char* pFlightDate;
 
 }FlightInfo;
 
+//functions that deal with struct
 int fillFlightInfo(FlightInfo*, char*, char*);
 int printFlightInfo(FlightInfo[]);
+//function that improves syntax
 int removeNewline(char[]);
 
 int main()
 {
 
-	FlightInfo singleFlight[SIZEOF_ARRAY];
+	FlightInfo flightList[SIZEOF_ARRAY];
 
-	//INPUT
-	//prompt user to get input (printf "enter destination #[%d]", i+1) and then (printf "enter
-	// date of flight #[%d], i+1)
-    //stdin 10 pairs of c-style string
-	//the two strings are entered on two separate lines (20 inputs total?)
-	//remove newline and replace with null terminated?
-	//input string less than 30 characters long
-
-	//use for loop to take in input using the SIZEOF_ARR in condition
-	//within one iteration of the for loop:
-	// prompt user
-	// take stdin for destination and store in a temporary char pointer
-	// prompt user again 
-	// take stdin for date and store in a temporary char pointer
-	// create a pointer of flightInfo which I THINK should point to the current index of flightInfo variable array
-	// call fillFlightInfo(flightInfo* pointAtArr, temp dest, temp date)
-
+	//QUESTIONS
+	//input string less than 30 characters long, do i have to error check for this?
+	//should i error check for empty strings
+	//error check for stdin?
+	//ask if i am pointing to the right thing for first param of fillFlightInfo
+	//can i add anything else to print function orrr is it a trick
+	//did i free it correctly?
 
 	for (int i = 0; i < SIZEOF_ARRAY; i++)
 	{
@@ -73,26 +61,18 @@ int main()
 
 		removeNewline(dateBuffer);
 
-		FlightInfo* pCurrentFlight = &singleFlight[i];
+		FlightInfo* pCurrentFlight = &flightList[i];
 
 		//could also put in the pointers used after fgets
 		fillFlightInfo(pCurrentFlight, destinationBuffer, dateBuffer);
 
-		//removeNewline(pInputDest);
-
-		//printf("%s and %s", destinationBuffer, dateBuffer);
-
-		//printf("%s", pInputDest);
-
-		printf("%s working and %s", singleFlight[i].pFlightDest, singleFlight[i].pFlightDate);
-
-		printf("hello");
-
 	}
 
-
+	printFlightInfo(flightList);
 
 	//must free ALL memory allocated from using malloc() here at the end of main
+	free(flightList->pFlightDest);
+	free(flightList->pFlightDate);
 
 	return 0;
 }
@@ -137,15 +117,20 @@ int fillFlightInfo(FlightInfo* pCurrentFlight, char* pInputDest, char* pInputDat
 // formatted way, one flight per line. 
 //PARAMETERS: array of (struct) datatype FlightInfo
 //RETURNS: TBD
-int printFlightInfo(FlightInfo[])
+int printFlightInfo(FlightInfo flightPairs[])
 {
 	//destination displayed in the first 35 characters of the line (left justified)
 	//date displayed in next 35 characters of the line (left justified)
 	//so this means that there may be a gap between these two?^^
 	//use printf width specifiers
 
-	//use a for loop to iterate through the array
-	//use SIZEOF_ARRAY in condition
+
+	printf("Here is a list of all %d flight datasets you entered\n", SIZEOF_ARRAY);
+
+	for (int i = 0; i < SIZEOF_ARRAY; i++)
+	{
+		printf("%-35s %-35s\n", flightPairs->pFlightDest, flightPairs->pFlightDate);
+	}
 
 	return 0;
 }
