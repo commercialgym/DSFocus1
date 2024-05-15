@@ -31,6 +31,7 @@ typedef struct
 
 int fillFlightInfo(FlightInfo*, char*, char*);
 int printFlightInfo(FlightInfo[]);
+int removeNewline(char[]);
 
 int main()
 {
@@ -53,7 +54,41 @@ int main()
 	// take stdin for date and store in a temporary char pointer
 	// create a pointer of flightInfo which I THINK should point to the current index of flightInfo variable array
 	// call fillFlightInfo(flightInfo* pointAtArr, temp dest, temp date)
-	//
+
+
+	for (int i = 0; i < SIZEOF_ARRAY; i++)
+	{
+		char destinationBuffer[MAX_CHARS] = { 0 };
+		char dateBuffer[MAX_CHARS] = { 0 };
+		char* pInputDest = NULL;
+		char* pDateInput = NULL;
+
+		printf("Please enter the destination of flight #%d: ", i + 1);
+		pInputDest = fgets(destinationBuffer, MAX_CHARS, stdin);
+
+		removeNewline(destinationBuffer);
+
+		printf("Please enter the date of flight #%d: ", i + 1);
+		pDateInput = fgets(dateBuffer, MAX_CHARS, stdin);
+
+		removeNewline(dateBuffer);
+
+		FlightInfo* pCurrentFlight = &singleFlight[i];
+
+		//could also put in the pointers used after fgets
+		fillFlightInfo(pCurrentFlight, destinationBuffer, dateBuffer);
+
+		//removeNewline(pInputDest);
+
+		//printf("%s and %s", destinationBuffer, dateBuffer);
+
+		//printf("%s", pInputDest);
+
+		printf("%s working and %s", singleFlight[i].pFlightDest, singleFlight[i].pFlightDate);
+
+		printf("hello");
+
+	}
 
 
 
@@ -68,26 +103,29 @@ int main()
 //PARAMETERS: pointer to struct, pointer to char (struct field for destination), pointer to char
 // (struct field for date)
 //RETURNS: TBD
-int fillFlightInfo(FlightInfo* pFlightData, char* pInputDest, char* pInputDate)
+int fillFlightInfo(FlightInfo* pCurrentFlight, char* pInputDest, char* pInputDate)
 {
-	char* pFlightDest = NULL;
-	char* pFlightDate = NULL;
 	//MUST allocate two blocks of memory to contain the destination string and date string
-	if (( pFlightDest = (char*)malloc(MAX_CHARS)) == NULL)
+	//think about creating a variable to get rid of magic numbers
+	if (( pCurrentFlight->pFlightDest = (char*)malloc(MAX_CHARS + 1)) == NULL)
 	{
-		//write error handling here
+		printf("Error alloting space for flight destination field\n");
+		return -1;
 	}
 
-	if ((pFlightDate = (char*)malloc(MAX_CHARS)) == NULL)
+	if ((pCurrentFlight->pFlightDate = (char*)malloc(MAX_CHARS + 1)) == NULL)
 	{
-		//write error handling here
+		printf("Error alloting space for flight date field\n");
+		return -1;
 	}
 	//parse the flight info here?/remove newline
 	//note to self: dereference the pFlightData here?
 
-	strcpy(pFlightData->pFlightDest, pInputDest);
+	strcpy(pCurrentFlight->pFlightDest, pInputDest);
 	
-	strcpy(pFlightData->pFlightDate, pInputDate);
+	strcpy(pCurrentFlight->pFlightDate, pInputDate);
+
+	//printf("%s and %s", pFlightData->pFlightDest, pFlightData->pFlightDate);
 	
 
 	return 0;
@@ -109,5 +147,23 @@ int printFlightInfo(FlightInfo[])
 	//use a for loop to iterate through the array
 	//use SIZEOF_ARRAY in condition
 
+	return 0;
+}
+
+
+// FUNCTION: removeNewline()
+// DESCRIPTION: accesses the last index of the inputted char array 
+// and checks for newline and replaces it will null terminator. 
+// PARAMETERS: char inputBuffer[], the char array of user's input
+// RETURNS: TBD / 0 upon success
+int removeNewline(char inputBuffer[])
+{
+	size_t length = strlen(inputBuffer);
+
+	//use the length (of string) - 1 to index the last element of the string
+	if (inputBuffer[length - 1] == '\n')
+	{
+		inputBuffer[length - 1] = '\0';
+	}
 	return 0;
 }
