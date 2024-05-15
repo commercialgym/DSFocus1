@@ -21,8 +21,11 @@
 typedef struct
 {
 	//ensure this is proper way to "know how long each string is" struct requirements
-	char* pDestination = (char*)malloc(MAX_CHARS);
-	char* pDate = (char*)malloc(MAX_CHARS);
+	//since error checking is required i may have to use malloc elsewhere for these pointers?
+	//error that compiler was giving me made me realize that i must use malloc elsewhere so that i can also
+	//error check for them
+	char* pFlightDest;
+	char* pFlightDate;
 
 }FlightInfo;
 
@@ -31,6 +34,9 @@ int printFlightInfo(FlightInfo[]);
 
 int main()
 {
+
+	FlightInfo singleFlight[SIZEOF_ARRAY];
+
 	//INPUT
 	//prompt user to get input (printf "enter destination #[%d]", i+1) and then (printf "enter
 	// date of flight #[%d], i+1)
@@ -39,7 +45,16 @@ int main()
 	//remove newline and replace with null terminated?
 	//input string less than 30 characters long
 
-	FlightInfo singleFlight[SIZEOF_ARRAY];
+	//use for loop to take in input using the SIZEOF_ARR in condition
+	//within one iteration of the for loop:
+	// prompt user
+	// take stdin for destination and store in a temporary char pointer
+	// prompt user again 
+	// take stdin for date and store in a temporary char pointer
+	// create a pointer of flightInfo which I THINK should point to the current index of flightInfo variable array
+	// call fillFlightInfo(flightInfo* pointAtArr, temp dest, temp date)
+	//
+
 
 
 	//must free ALL memory allocated from using malloc() here at the end of main
@@ -53,10 +68,27 @@ int main()
 //PARAMETERS: pointer to struct, pointer to char (struct field for destination), pointer to char
 // (struct field for date)
 //RETURNS: TBD
-int fillFlightInfo(FlightInfo* pFlightData, char* pFlightDest, char* pFlightDate)
+int fillFlightInfo(FlightInfo* pFlightData, char* pInputDest, char* pInputDate)
 {
+	char* pFlightDest = NULL;
+	char* pFlightDate = NULL;
 	//MUST allocate two blocks of memory to contain the destination string and date string
-	//parse the flight info here?
+	if (( pFlightDest = (char*)malloc(MAX_CHARS)) == NULL)
+	{
+		//write error handling here
+	}
+
+	if ((pFlightDate = (char*)malloc(MAX_CHARS)) == NULL)
+	{
+		//write error handling here
+	}
+	//parse the flight info here?/remove newline
+	//note to self: dereference the pFlightData here?
+
+	strcpy(pFlightData->pFlightDest, pInputDest);
+	
+	strcpy(pFlightData->pFlightDate, pInputDate);
+	
 
 	return 0;
 }
