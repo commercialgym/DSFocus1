@@ -27,52 +27,42 @@ typedef struct
 
 //functions that deal with struct
 int fillFlightInfo(FlightInfo*, char*, char*);
-int printFlightInfo(FlightInfo[]);
+void printFlightInfo(FlightInfo[]);
 //function that improves syntax
-int removeNewline(char[]);
+void removeNewline(char[]);
 
 int main()
 {
-
-	FlightInfo flightList[SIZEOF_ARRAY];
-
-	//QUESTIONS
-	//input string less than 30 characters long, do i have to error check for this?
-	//should i error check for empty strings
-	//error check for stdin?
-	//ask if i am pointing to the right thing for first param of fillFlightInfo
-	//can i add anything else to print function orrr is it a trick
-	//did i free it correctly?
+	//will hold user's input
+	FlightInfo flightList[SIZEOF_ARRAY] = {0};
 
 	for (int i = 0; i < SIZEOF_ARRAY; i++)
 	{
 		char destinationBuffer[MAX_CHARS] = { 0 };
 		char dateBuffer[MAX_CHARS] = { 0 };
-		char* pInputDest = NULL;
-		char* pDateInput = NULL;
 
 		printf("Please enter the destination of flight #%d: ", i + 1);
-		pInputDest = fgets(destinationBuffer, MAX_CHARS, stdin);
-
+		fgets(destinationBuffer, MAX_CHARS, stdin);
 		removeNewline(destinationBuffer);
 
 		printf("Please enter the date of flight #%d: ", i + 1);
-		pDateInput = fgets(dateBuffer, MAX_CHARS, stdin);
-
+		fgets(dateBuffer, MAX_CHARS, stdin);
 		removeNewline(dateBuffer);
 
 		FlightInfo* pCurrentFlight = &flightList[i];
 
 		//could also put in the pointers used after fgets
 		fillFlightInfo(pCurrentFlight, destinationBuffer, dateBuffer);
-
 	}
 
 	printFlightInfo(flightList);
 
-	//must free ALL memory allocated from using malloc() here at the end of main
-	free(flightList->pFlightDest);
-	free(flightList->pFlightDate);
+	//have to iterate through entire array to free the memory
+	for (int i = 0; i < SIZEOF_ARRAY; i++)
+	{
+		free(flightList[i].pFlightDest);
+		free(flightList[i].pFlightDate);
+	}
 
 	return 0;
 }
@@ -85,28 +75,20 @@ int main()
 //RETURNS: TBD
 int fillFlightInfo(FlightInfo* pCurrentFlight, char* pInputDest, char* pInputDate)
 {
-	//MUST allocate two blocks of memory to contain the destination string and date string
-	//think about creating a variable to get rid of magic numbers
+	//+1 is for allocating one more byte of space for null terminator
 	if (( pCurrentFlight->pFlightDest = (char*)malloc(MAX_CHARS + 1)) == NULL)
 	{
 		printf("Error alloting space for flight destination field\n");
 		return -1;
 	}
-
 	if ((pCurrentFlight->pFlightDate = (char*)malloc(MAX_CHARS + 1)) == NULL)
 	{
 		printf("Error alloting space for flight date field\n");
 		return -1;
 	}
-	//parse the flight info here?/remove newline
-	//note to self: dereference the pFlightData here?
-
+	//add the data to the struct field
 	strcpy(pCurrentFlight->pFlightDest, pInputDest);
-	
 	strcpy(pCurrentFlight->pFlightDate, pInputDate);
-
-	//printf("%s and %s", pFlightData->pFlightDest, pFlightData->pFlightDate);
-	
 
 	return 0;
 }
@@ -115,9 +97,9 @@ int fillFlightInfo(FlightInfo* pCurrentFlight, char* pInputDest, char* pInputDat
 //FUNCTION: printFlightInfo()
 //DESCRIPTION: Called only once from main and prints all the info within the array of struct in a nicely-
 // formatted way, one flight per line. 
-//PARAMETERS: array of (struct) datatype FlightInfo
-//RETURNS: TBD
-int printFlightInfo(FlightInfo flightPairs[])
+//PARAMETERS: flightPairs[], array of (struct) datatype FlightInfo
+//RETURNS: void
+void printFlightInfo(FlightInfo flightPairs[])
 {
 	//destination displayed in the first 35 characters of the line (left justified)
 	//date displayed in next 35 characters of the line (left justified)
@@ -131,8 +113,6 @@ int printFlightInfo(FlightInfo flightPairs[])
 	{
 		printf("%-35s %-35s\n", flightPairs->pFlightDest, flightPairs->pFlightDate);
 	}
-
-	return 0;
 }
 
 
@@ -140,8 +120,8 @@ int printFlightInfo(FlightInfo flightPairs[])
 // DESCRIPTION: accesses the last index of the inputted char array 
 // and checks for newline and replaces it will null terminator. 
 // PARAMETERS: char inputBuffer[], the char array of user's input
-// RETURNS: TBD / 0 upon success
-int removeNewline(char inputBuffer[])
+// RETURNS: void
+void removeNewline(char inputBuffer[])
 {
 	size_t length = strlen(inputBuffer);
 
@@ -150,5 +130,4 @@ int removeNewline(char inputBuffer[])
 	{
 		inputBuffer[length - 1] = '\0';
 	}
-	return 0;
 }
