@@ -31,7 +31,7 @@ void printFlightInfo(FlightInfo[]);
 //function that improves syntax
 void removeNewline(char[]);
 
-int main()
+int main(void)
 {
 	//will hold user's input
 	FlightInfo flightList[SIZEOF_ARRAY] = {0};
@@ -111,7 +111,7 @@ void printFlightInfo(FlightInfo flightPairs[])
 
 	for (int i = 0; i < SIZEOF_ARRAY; i++)
 	{
-		printf("%-35s %-35s\n", flightPairs->pFlightDest, flightPairs->pFlightDate);
+		printf("%-35s %-35s\n", flightPairs[i].pFlightDest, flightPairs[i].pFlightDate);
 	}
 }
 
